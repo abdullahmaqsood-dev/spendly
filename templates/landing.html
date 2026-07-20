@@ -2,69 +2,67 @@
 
 {% block title %}Spendly — Track Every Rupee{% endblock %}
 
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
-{% endblock %}
+{% block head %}{% endblock %}
 
 {% block content %}
 
-<section class="hero">
-    <div class="hero-content">
-        <div class="hero-badge">Free to use · No credit card needed</div>
-        <h1 class="hero-title">
+<section class="landing-hero">
+    <div class="landing-hero-content">
+        <div class="landing-hero-badge">Free to use · No credit card needed</div>
+        <h1 class="landing-hero-title">
             Track every rupee.<br>
-            <span class="hero-title-accent">Know where it goes.</span>
+            <span class="landing-hero-title-accent">Know where it goes.</span>
         </h1>
-        <p class="hero-subtitle">
+        <p class="landing-hero-subtitle">
             Spendly helps you log expenses, spot patterns, and stay
             on budget — without the spreadsheet headache.
         </p>
-        <div class="hero-actions">
+        <div class="landing-hero-actions">
             <a href="{{ url_for('register') }}" class="btn-primary">Create free account</a>
             <a href="{{ url_for('login') }}" class="btn-secondary" id="howItWorksBtn">See how it works</a>
         </div>
     </div>
-    <div class="hero-visual">
-        <div class="hero-card">
-            <div class="hero-card-top">
-                <span class="hero-dot hero-dot-red"></span>
-                <span class="hero-dot hero-dot-yellow"></span>
-                <span class="hero-dot hero-dot-green"></span>
+    <div class="landing-hero-visual">
+        <div class="landing-hero-card">
+            <div class="landing-hero-card-top">
+                <span class="landing-hero-dot landing-hero-dot-red"></span>
+                <span class="landing-hero-dot landing-hero-dot-yellow"></span>
+                <span class="landing-hero-dot landing-hero-dot-green"></span>
             </div>
-            <div class="hero-metrics">
-                <div class="hero-metric-box">
-                    <div class="hero-metric-label">This month</div>
-                    <div class="hero-metric-value">₨18,240</div>
-                    <div class="hero-metric-note hero-metric-note-negative">+12% vs last</div>
+            <div class="landing-hero-metrics">
+                <div class="landing-hero-metric-box">
+                    <div class="landing-hero-metric-label">This month</div>
+                    <div class="landing-hero-metric-value">₨18,240</div>
+                    <div class="landing-hero-metric-note landing-hero-metric-note-negative">+12% vs last</div>
                 </div>
-                <div class="hero-metric-box">
-                    <div class="hero-metric-label">Budget left</div>
-                    <div class="hero-metric-value">₨6,760</div>
-                    <div class="hero-metric-note hero-metric-note-positive">43% remaining</div>
+                <div class="landing-hero-metric-box">
+                    <div class="landing-hero-metric-label">Budget left</div>
+                    <div class="landing-hero-metric-value">₨6,760</div>
+                    <div class="landing-hero-metric-note landing-hero-metric-note-positive">43% remaining</div>
                 </div>
-                <div class="hero-metric-box">
-                    <div class="hero-metric-label">Transactions</div>
-                    <div class="hero-metric-value">34</div>
-                    <div class="hero-metric-note">this month</div>
+                <div class="landing-hero-metric-box">
+                    <div class="landing-hero-metric-label">Transactions</div>
+                    <div class="landing-hero-metric-value">34</div>
+                    <div class="landing-hero-metric-note">this month</div>
                 </div>
             </div>
-            <div class="hero-bars-card">
-                <div class="hero-bar-row">
-                    <span class="hero-bar-label">Food</span>
-                    <div class="hero-bar-track">
-                        <div class="hero-bar hero-bar-food" style="width: 72%"></div>
+            <div class="landing-hero-bars-card">
+                <div class="landing-hero-bar-row">
+                    <span class="landing-hero-bar-label">Food</span>
+                    <div class="landing-hero-bar-track">
+                        <div class="landing-hero-bar landing-hero-bar-food" style="width: 72%"></div>
                     </div>
                 </div>
-                <div class="hero-bar-row">
-                    <span class="hero-bar-label">Travel</span>
-                    <div class="hero-bar-track">
-                        <div class="hero-bar hero-bar-travel" style="width: 48%"></div>
+                <div class="landing-hero-bar-row">
+                    <span class="landing-hero-bar-label">Travel</span>
+                    <div class="landing-hero-bar-track">
+                        <div class="landing-hero-bar landing-hero-bar-travel" style="width: 48%"></div>
                     </div>
                 </div>
-                <div class="hero-bar-row">
-                    <span class="hero-bar-label">Bills</span>
-                    <div class="hero-bar-track">
-                        <div class="hero-bar hero-bar-bills" style="width: 38%"></div>
+                <div class="landing-hero-bar-row">
+                    <span class="landing-hero-bar-label">Bills</span>
+                    <div class="landing-hero-bar-track">
+                        <div class="landing-hero-bar landing-hero-bar-bills" style="width: 38%"></div>
                     </div>
                 </div>
             </div>
@@ -100,17 +98,17 @@
     </div>
 </section>
 
-<div class="video-modal" id="videoModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
-    <div class="video-modal-backdrop" data-close-modal></div>
-    <div class="video-modal-dialog" role="document">
-        <div class="video-modal-header">
-            <h2 class="video-modal-title" id="videoModalTitle">See how Spendly works</h2>
-            <button type="button" class="video-modal-close" data-close-modal aria-label="Close video">
+<div class="landing-video-modal" id="videoModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
+    <div class="landing-video-modal-backdrop" data-close-modal></div>
+    <div class="landing-video-modal-dialog" role="document">
+        <div class="landing-video-modal-header">
+            <h2 class="landing-video-modal-title" id="videoModalTitle">See how Spendly works</h2>
+            <button type="button" class="landing-video-modal-close" data-close-modal aria-label="Close video">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <div class="video-modal-body">
-            <div class="video-modal-frame" id="videoFrameContainer">
+        <div class="landing-video-modal-body">
+            <div class="landing-video-modal-frame" id="videoFrameContainer">
                 <iframe
                     id="videoFrame"
                     src=""
@@ -149,7 +147,7 @@
             modal.classList.add('is-open');
             modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
-            var closeBtn = modal.querySelector('.video-modal-close');
+            var closeBtn = modal.querySelector('.landing-video-modal-close');
             if (closeBtn) {
                 closeBtn.focus();
             }
