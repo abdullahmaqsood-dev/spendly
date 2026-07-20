@@ -333,3 +333,118 @@
         gap: 0.75rem;
     }
 }
+
+/* ==========================================================================
+   Video Modal (How it works)
+   ========================================================================== */
+
+.video-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.video-modal.is-open {
+    display: flex;
+}
+
+.video-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 15, 15, 0.78);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    cursor: pointer;
+}
+
+.video-modal-dialog {
+    position: relative;
+    width: 100%;
+    max-width: 920px;
+    background: #ffffff;
+    border-radius: 1.1rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 3rem);
+}
+
+.video-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.4rem;
+    border-bottom: 1px solid #eeece7;
+}
+
+.video-modal-title {
+    margin: 0;
+    font-family: var(--font-sans, "DM Sans", system-ui, sans-serif);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111214;
+    line-height: 1.2;
+}
+
+.video-modal-close {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    color: #111214;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.video-modal-close:hover,
+.video-modal-close:focus {
+    background: #f1efe9;
+    outline: none;
+}
+
+.video-modal-body {
+    padding: 0;
+    background: #000000;
+}
+
+.video-modal-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000000;
+}
+
+.video-modal-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+
+@media (max-width: 600px) {
+    .video-modal {
+        padding: 0.75rem;
+    }
+
+    .video-modal-header {
+        padding: 0.9rem 1rem;
+    }
+
+    .video-modal-title {
+        font-size: 1.05rem;
+    }
+}

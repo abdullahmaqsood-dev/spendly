@@ -21,7 +21,7 @@
         </p>
         <div class="hero-actions">
             <a href="{{ url_for('register') }}" class="btn-primary">Create free account</a>
-            <a href="{{ url_for('login') }}" class="btn-secondary">See how it works</a>
+            <a href="{{ url_for('login') }}" class="btn-secondary" id="howItWorksBtn">See how it works</a>
         </div>
     </div>
     <div class="hero-visual">
@@ -100,4 +100,85 @@
     </div>
 </section>
 
+<div class="video-modal" id="videoModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
+    <div class="video-modal-backdrop" data-close-modal></div>
+    <div class="video-modal-dialog" role="document">
+        <div class="video-modal-header">
+            <h2 class="video-modal-title" id="videoModalTitle">See how Spendly works</h2>
+            <button type="button" class="video-modal-close" data-close-modal aria-label="Close video">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="video-modal-body">
+            <div class="video-modal-frame" id="videoFrameContainer">
+                <iframe
+                    id="videoFrame"
+                    src=""
+                    title="Spendly demo video"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    (function () {
+        var PLACEHOLDER_VIDEO_SRC = 'https://www.youtube.com/embed/HgQ14BpEfCs?autoplay=1&rel=0';
+
+        var modal = document.getElementById('videoModal');
+        var frameContainer = document.getElementById('videoFrameContainer');
+        var frame = document.getElementById('videoFrame');
+        var trigger = document.getElementById('howItWorksBtn');
+        var lastFocused = null;
+
+        if (!modal || !frame || !trigger) {
+            return;
+        }
+
+        function openModal(event) {
+            if (event) {
+                event.preventDefault();
+            }
+            lastFocused = document.activeElement;
+            frame.src = PLACEHOLDER_VIDEO_SRC;
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            var closeBtn = modal.querySelector('.video-modal-close');
+            if (closeBtn) {
+                closeBtn.focus();
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            frame.src = '';
+            document.body.style.overflow = '';
+            if (lastFocused && typeof lastFocused.focus === 'function') {
+                lastFocused.focus();
+            }
+        }
+
+        trigger.addEventListener('click', openModal);
+
+        modal.addEventListener('click', function (event) {
+            var target = event.target;
+            if (target && target.dataset && target.dataset.closeModal !== undefined) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+                closeModal();
+            }
+        });
+    })();
+</script>
 {% endblock %}
