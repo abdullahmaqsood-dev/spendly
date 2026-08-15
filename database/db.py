@@ -41,6 +41,21 @@ def init_db():
     finally:
         conn.close()
 
+def create_user(name, email, password):
+    """Hash password with werkzeug, insert user row, return new id.
+    Lets sqlite3.IntegrityError (from email UNIQUE) propagate to caller."""
+    conn = get_db()
+    try:
+        password_hash = generate_password_hash(password)
+        cursor = conn.execute(
+            'INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)',
+            (name, email, password_hash)
+        )
+        conn.commit()
+        return cursor.lastrowid
+    finally:
+        conn.close()
+
 def seed_db():
     """Insert sample data for development, but only if users table is empty."""
     conn = get_db()
@@ -54,12 +69,7 @@ def seed_db():
             return
 
         # Insert demo user
-        demo_password_hash = generate_password_hash('demo123')
-        cursor = conn.execute(
-            'INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)',
-            ('Demo User', 'demo@spendly.com', demo_password_hash)
-        )
-        user_id = cursor.lastrowid
+        user_id = create_user('Demo User', 'demo@spendly.com', 'demo123')
 
         # Sample expenses data
         # Format: (amount, category, date, description)
