@@ -56,6 +56,30 @@ def create_user(name, email, password):
     finally:
         conn.close()
 
+def find_user_by_email(email):
+    """Return the user row matching email, or None. Caller normalises email."""
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            'SELECT id, name, email, password_hash FROM users WHERE email = ? LIMIT 1',
+            (email,)
+        )
+        return cursor.fetchone()
+    finally:
+        conn.close()
+
+def find_user_by_id(user_id):
+    """Return the user row matching id, or None."""
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            'SELECT id, name, email, password_hash FROM users WHERE id = ? LIMIT 1',
+            (user_id,)
+        )
+        return cursor.fetchone()
+    finally:
+        conn.close()
+
 def seed_db():
     """Insert sample data for development, but only if users table is empty."""
     conn = get_db()
