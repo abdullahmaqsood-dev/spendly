@@ -79,7 +79,7 @@ def login():
             return render_template("login.html", error=error, user_name=current_user_name()), 400
 
         session["user_id"] = user["id"]
-        return redirect(url_for("landing"))
+        return redirect(url_for("profile"))
 
     return render_template("login.html", user_name=current_user_name())
 
@@ -108,7 +108,43 @@ def logout():
 
 @app.route("/profile")
 def profile():
-    return "Profile page — coming in Step 4"
+    if session.get("user_id") is None:
+        return redirect(url_for("login", next=url_for("profile")))
+
+    # Hardcoded profile data for Step 4 UI validation
+    user = {
+        "name": "Abdullah Maqsood",
+        "email": "abdullah@example.com",
+        "joined": "August 2026",
+    }
+    stats = {
+        "total_spent": "₨ 45,200.00",
+        "transaction_count": 124,
+        "top_category": "Dining",
+    }
+    transactions = [
+        {"date": "2026-08-28", "desc": "Grocery Store", "cat": "Groceries", "amt": "₨ 2,400.00"},
+        {"date": "2026-08-27", "desc": "Fuel Station", "cat": "Transport", "amt": "₨ 5,000.00"},
+        {"date": "2026-08-25", "desc": "Coffee Shop", "cat": "Dining", "amt": "₨ 850.00"},
+        {"date": "2026-08-22", "desc": "Internet Bill", "cat": "Utilities", "amt": "₨ 3,500.00"},
+        {"date": "2026-08-20", "desc": "Cinema Tickets", "cat": "Entertainment", "amt": "₨ 1,200.00"},
+    ]
+    categories = [
+        {"name": "Dining", "total": "₨ 12,000.00", "percent": 35},
+        {"name": "Transport", "total": "₨ 8,500.00", "percent": 22},
+        {"name": "Groceries", "total": "₨ 7,200.00", "percent": 18},
+        {"name": "Utilities", "total": "₨ 5,000.00", "percent": 12},
+        {"name": "Entertainment", "total": "₨ 3,000.00", "percent": 8},
+    ]
+
+    return render_template(
+        "profile.html",
+        user=user,
+        stats=stats,
+        transactions=transactions,
+        categories=categories,
+        user_name=current_user_name(),
+    )
 
 
 @app.route("/expenses/add")
