@@ -5,6 +5,8 @@ import sqlite3
 from database.db import (
     init_db, seed_db, create_user,
     find_user_by_email, find_user_by_id,
+    get_user_profile, get_user_stats,
+    get_recent_transactions, get_category_totals
 )
 
 app = Flask(__name__)
@@ -23,6 +25,11 @@ def current_user_name():
         return None
     user = find_user_by_id(user_id)
     return user["name"] if user else None
+
+
+def format_pkr(amount):
+    """Format a number as a PKR currency string."""
+    return f"₨ {amount:,.2f}"
 
 
 # ------------------------------------------------------------------ #
@@ -108,34 +115,69 @@ def logout():
 
 @app.route("/profile")
 def profile():
-    if session.get("user_id") is None:
-        return redirect(url_for("login", next=url_for("profile")))
+    user_id = session.get("user_id")
+    if user_id is None:
+        return redirect(url_for("login"))
 
-    # Hardcoded profile data for Step 4 UI validation
+    # 1. User Profile
+    profile_data = get_user_profile(user_id)
+    if not profile_data:
+        abort(404)
+
+    # Format joined date: "2026-09-18 10:00:00" -> "September 2026"
+    import datetime
+    created_at = profile_data["created_at"]
+    try:
+        dt = datetime.datetime.strptime(created_at, "%Y-%m-%d %H:%M:%S")
+    except (ValueError, TypeError):
+        dt = datetime.datetime.now()
+
     user = {
-        "name": "Abdullah Maqsood",
-        "email": "abdullah@example.com",
-        "joined": "August 2026",
+        "name": profile_data["name"],
+        "email": profile_data["email"],
+        "joined": dt.strftime("%B %Y"),
     }
+
+    # 2. Summary Stats
+    stats_data = get_user_stats(user_id)
     stats = {
-        "total_spent": "₨ 45,200.00",
-        "transaction_count": 124,
-        "top_category": "Dining",
+        "total_spent": format_pkr(stats_data["total_spent"]),
+        "transaction_count": stats_data["transaction_count"],
+        "top_category": stats_data["top_category"],
     }
+
+    # 3. Recent Transactions
+    tx_data = get_recent_transactions(user_id)
     transactions = [
-        {"date": "2026-08-28", "desc": "Grocery Store", "cat": "Groceries", "amt": "₨ 2,400.00"},
-        {"date": "2026-08-27", "desc": "Fuel Station", "cat": "Transport", "amt": "₨ 5,000.00"},
-        {"date": "2026-08-25", "desc": "Coffee Shop", "cat": "Dining", "amt": "₨ 850.00"},
-        {"date": "2026-08-22", "desc": "Internet Bill", "cat": "Utilities", "amt": "₨ 3,500.00"},
-        {"date": "2026-08-20", "desc": "Cinema Tickets", "cat": "Entertainment", "amt": "₨ 1,200.00"},
+        {
+            "date": tx["date"],
+            "desc": tx["description"],
+            "cat": tx["category"],
+            "amt": format_pkr(tx["amount"]),
+        }
+        for tx in tx_data
     ]
-    categories = [
-        {"name": "Dining", "total": "₨ 12,000.00", "percent": 35},
-        {"name": "Transport", "total": "₨ 8,500.00", "percent": 22},
-        {"name": "Groceries", "total": "₨ 7,200.00", "percent": 18},
-        {"name": "Utilities", "total": "₨ 5,000.00", "percent": 12},
-        {"name": "Entertainment", "total": "₨ 3,000.00", "percent": 8},
-    ]
+
+    # 4. Category Breakdown
+    cat_data = get_category_totals(user_id)
+    total_all = sum(c["total"] for c in cat_data)
+
+    categories = []
+    for c in cat_data:
+        percent = 0
+        if total_all > 0:
+            percent = round((c["total"] / total_all) * 100)
+
+        categories.append({
+            "name": c["category"],
+            "total": format_pkr(c["total"]),
+            "percent": percent,
+        })
+
+    # Fix rounding remainder to ensure sum is 100%
+    if categories:
+        diff = 100 - sum(c["percent"] for c in categories)
+        categories[0]["percent"] += diff
 
     return render_template(
         "profile.html",

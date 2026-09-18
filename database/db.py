@@ -80,6 +80,71 @@ def find_user_by_id(user_id):
     finally:
         conn.close()
 
+
+def get_user_profile(user_id):
+    """Return name, email, and created_at for the user."""
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            'SELECT name, email, created_at FROM users WHERE id = ?',
+            (user_id,)
+        )
+        return cursor.fetchone()
+    finally:
+        conn.close()
+
+
+def get_user_stats(user_id):
+    """Return total spent, transaction count, and top category for the user."""
+    conn = get_db()
+    try:
+        # Get basic stats
+        stats = conn.execute(
+            'SELECT SUM(amount) as total, COUNT(*) as count FROM expenses WHERE user_id = ?',
+            (user_id,)
+        ).fetchone()
+
+        # Get top category
+        top_cat = conn.execute(
+            'SELECT category FROM expenses WHERE user_id = ? GROUP BY category ORDER BY SUM(amount) DESC LIMIT 1',
+            (user_id,)
+        ).fetchone()
+
+        return {
+            "total_spent": stats["total"] if stats["total"] else 0.0,
+            "transaction_count": stats["count"] if stats["count"] else 0,
+            "top_category": top_cat["category"] if top_cat else "—"
+        }
+    finally:
+        conn.close()
+
+
+def get_recent_transactions(user_id, limit=5):
+    """Return the most recent expenses for the user."""
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            'SELECT date, description, category, amount FROM expenses WHERE user_id = ? ORDER BY date DESC LIMIT ?',
+            (user_id, limit)
+        )
+        return [dict(row) for row in cursor.fetchall()]
+    finally:
+        conn.close()
+
+
+def get_category_totals(user_id):
+    """Return total spent per category for the user."""
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            'SELECT category, SUM(amount) as total FROM expenses WHERE user_id = ? GROUP BY category ORDER BY total DESC',
+            (user_id,)
+        )
+        return [dict(row) for row in cursor.fetchall()]
+    finally:
+        conn.close()
+
+
 def seed_db():
     """Insert sample data for development, but only if users table is empty."""
     conn = get_db()
